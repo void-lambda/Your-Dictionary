@@ -3,7 +3,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagLayout;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -87,43 +86,44 @@ public class Main {
         deckListPanel.removeAll();
 
         for (Deck deck : decks) {
-            // Строка: [Кнопка колоды] [+] [X]
             JPanel rowPanel = new JPanel(new BorderLayout(5, 0));
             rowPanel.setMaximumSize(new Dimension(320, 42));
             rowPanel.setBackground(new Color(235, 235, 242));
-            rowPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 8, 0));
+            rowPanel.setBorder(BorderFactory.createEmptyBorder(0,0,8,0));
 
-            // 1. Кнопка выбора колоды
+            // Deck's Button
             JButton selectBtn = new JButton(deck.name + " (" + deck.cards.size() + ")");
             selectBtn.setHorizontalAlignment(SwingConstants.LEFT);
             selectBtn.setFont(new Font("SansSerif", Font.PLAIN, 14));
+
             if (deck == selectedDeck) {
                 selectBtn.setBackground(new Color(210, 225, 255));
-                selectBtn.setFont(new Font("SansSerif", Font.BOLD, 14));
+                selectBtn.setFont(new Font("SansSerif", Font.PLAIN, 14));
             }
+
             selectBtn.addActionListener(e -> {
                 selectedDeck = deck;
                 statusLabel.setText("Selected: " + deck.name);
                 refreshDeckList(window);
             });
 
-            // Контейнер под кнопки [+] и [X]
+            // Container for [+] and [x] buttons
             JPanel rightButtons = new JPanel(new BorderLayout(4, 0));
             rightButtons.setBackground(new Color(235, 235, 242));
 
-            // 2. Плюсик (заглушка редактора)
+            // [+] - Not done yet
             JButton addCardBtn = new JButton("+");
-            addCardBtn.setToolTipText("Add card");
+            addCardBtn.setToolTipText("Add Card");
             addCardBtn.addActionListener(e -> {
                 selectedDeck = deck;
                 refreshDeckList(window);
-                JOptionPane.showMessageDialog(window, "Editor stub for: " + deck.name);
+                JOptionPane.showMessageDialog(window, "Editor stub for: ");
             });
 
-            // 3. Крестик (удаление колоды)
+            // [x] (Delete Deck)
             JButton deleteBtn = new JButton("X");
             deleteBtn.setForeground(Color.RED);
-            deleteBtn.setToolTipText("Delete deck");
+            deleteBtn.setToolTipText("Delete Deck");
             deleteBtn.addActionListener(e -> deleteDeck(window, deck));
 
             rightButtons.add(addCardBtn, BorderLayout.WEST);
@@ -134,11 +134,9 @@ public class Main {
 
             deckListPanel.add(rowPanel);
         }
-
         if (selectedDeck == null) {
-            statusLabel.setText(decks.isEmpty() ? "No decks yet. Create one!" : "Select a deck on the right");
+            statusLabel.setText(decks.isEmpty() ? "No Decks yet. Create one!" : "Select a Deck on the right");
         }
-
         deckListPanel.revalidate();
         deckListPanel.repaint();
     }
@@ -197,25 +195,25 @@ public class Main {
         mainPanel.setBackground(BGCOL);
         mainPanel.setLayout(new BorderLayout());
 
-        // Lingi
-        JPanel centerPanel = new JPanel(new GridBagLayout());
+        JPanel centerPanel = new JPanel();
         centerPanel.setBackground(BGCOL);
-
+        
+        // Lingi's place 
         JPanel lingiBoxWrapper = new JPanel();
         lingiBoxWrapper.setLayout(new BoxLayout(lingiBoxWrapper, BoxLayout.Y_AXIS));
         lingiBoxWrapper.setBackground(BGCOL);
-
-        JLabel lingiArtBox = new JLabel("Lingi 32x32 (256x256)", SwingConstants.CENTER);
-        lingiArtBox.setPreferredSize(new Dimension(256, 256));
-        lingiArtBox.setMinimumSize(new Dimension(256, 256));
-        lingiArtBox.setMaximumSize(new Dimension(256, 256));
+        
+        JPanel lingiArtBox = new JPanel();
+        lingiArtBox.setPreferredSize(new Dimension (256, 256));
+        lingiArtBox.setMinimumSize(new Dimension (256, 256));
+        lingiArtBox.setMaximumSize(new Dimension (256, 256));
         lingiArtBox.setOpaque(true);
         lingiArtBox.setBackground(new Color(225, 225, 235));
         lingiArtBox.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
         lingiArtBox.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
-        statusLabel = new JLabel("Lingi is waiting...", SwingConstants.CENTER);
-        statusLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        statusLabel = new JLabel("Lingi is Waiting for you!", SwingConstants.CENTER);
+        statusLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
         statusLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
         lingiBoxWrapper.add(lingiArtBox);
@@ -223,7 +221,9 @@ public class Main {
         lingiBoxWrapper.add(statusLabel);
         centerPanel.add(lingiBoxWrapper);
 
-        // --- СПРАВА: Панель со списком колод ---
+
+
+        // On the right - Panel with a list of Decks
         JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.setPreferredSize(new Dimension(350, HEIGHT));
         rightPanel.setBackground(new Color(235, 235, 242));
@@ -246,10 +246,9 @@ public class Main {
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(rightPanel, BorderLayout.EAST);
 
-        // Отрисовываем загруженные из БД колоды при запуске
+        // Updating DB + Decks
         refreshDeckList(window);
-
-
+        
         window.add(mainPanel);
         window.setVisible(true);
     }
